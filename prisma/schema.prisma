@@ -1,0 +1,273 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          String       @id @default(uuid())
+  email       String       @unique
+  fullName    String?
+  role        Role         @default(CUSTOMER)
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @default(now()) @updatedAt
+  avatar      String?
+  firebaseId  String       @unique
+  khachHang   KhachHang?
+  mauThietKes MauThietKe[]
+}
+
+model KhachHang {
+  id             String          @id @default(uuid())
+  userId         String          @unique
+  phone          String?
+  address        String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @default(now()) @updatedAt
+  donHangs       DonHang[]
+  gioHangs       GioHang?
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lichHenDatMays LichHenDatMay[]
+  soDo           SoDoKhachHang?
+}
+
+model SoDoKhachHang {
+  id            String    @id @default(uuid())
+  khachHangId   String    @unique
+  chieuDaiAo    Float?
+  vongCo        Float?
+  vongNguc      Float?
+  vongEo        Float?
+  vongHong      Float?
+  beNgangVai    Float?
+  chieuDaiVaiEo Float?
+  daiTay        Float?
+  vongBapTay    Float?
+  chieuDaiQuan  Float?
+  vongDui       Float?
+  vongDauGoi    Float?
+  vongOngQuan   Float?
+  createdAt     DateTime  @default(now())
+  khachHang     KhachHang @relation(fields: [khachHangId], references: [id], onDelete: Cascade)
+}
+
+model GioHang {
+  id           String        @id @default(uuid())
+  khachHangId  String        @unique
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @default(now()) @updatedAt
+  khachHang    KhachHang     @relation(fields: [khachHangId], references: [id], onDelete: Cascade)
+  gioHangItems GioHangItem[]
+}
+
+model GioHangItem {
+  id        String        @id @default(uuid())
+  gioHangId String
+  sanPhamId String
+  quantity  Int
+  price     Float
+  gioHang   GioHang       @relation(fields: [gioHangId], references: [id], onDelete: Cascade)
+  sanPham   SanPhamDatMay @relation(fields: [sanPhamId], references: [id], onDelete: Cascade)
+}
+
+model LichHenDatMay {
+  id              String        @id @default(uuid())
+  khachHangId     String
+  appointmentDate DateTime
+  notes           String?
+  status          LichHenStatus
+  createdAt       DateTime      @default(now())
+  khachHang       KhachHang     @relation(fields: [khachHangId], references: [id], onDelete: Cascade)
+}
+
+model DonHang {
+  id                  String           @id @default(uuid())
+  khachHangId         String
+  orderDate           DateTime         @default(now())
+  status              DonHangStatus
+  totalAmount         Float
+  createdAt           DateTime         @default(now())
+  diaChiGiaoHang      String
+  ghiChu              String?
+  phiGiaoHang         Float?
+  phuongThucThanhToan String
+  soDoKhachHangId     String?
+  thanhToanThanhCong  Boolean
+  updatedAt           DateTime         @default(now()) @updatedAt
+  vouchers            String?
+  chiTietDonHangs     ChiTietDonHang[]
+  khachHang           KhachHang        @relation(fields: [khachHangId], references: [id], onDelete: Cascade)
+  voucher             Voucher?         @relation(fields: [vouchers], references: [code])
+  giaoHang            GiaoHang?
+  phieuGiaoHangs      PhieuGiaoHang?
+  phieuThanhToans     PhieuThanhToan?
+  thanhToan           ThanhToan?
+}
+
+model ChiTietDonHang {
+  id        String        @id @default(uuid())
+  donHangId String
+  sanPhamId String
+  quantity  Int
+  price     Float
+  createdAt DateTime      @default(now())
+  donHang   DonHang       @relation(fields: [donHangId], references: [id], onDelete: Cascade)
+  sanPham   SanPhamDatMay @relation(fields: [sanPhamId], references: [id], onDelete: Cascade)
+}
+
+model ThanhToan {
+  id            String        @id @default(uuid())
+  donHangId     String        @unique
+  paymentMethod PaymentMethod
+  paymentStatus PaymentStatus
+  transactionId String?       @unique
+  createdAt     DateTime      @default(now())
+  paymentDate   DateTime      @default(now())
+  paymentType   PaymentType
+  donHang       DonHang       @relation(fields: [donHangId], references: [id], onDelete: Cascade)
+}
+
+model PhieuThanhToan {
+  id            String        @id @default(uuid())
+  donHangId     String        @unique
+  paymentMethod PaymentMethod
+  paymentType   PaymentType
+  amount        Float
+  isRefunded    Boolean       @default(false)
+  refundAmount  Float?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @default(now()) @updatedAt
+  donHang       DonHang       @relation(fields: [donHangId], references: [id], onDelete: Cascade)
+}
+
+model Voucher {
+  id        String    @id @default(uuid())
+  code      String    @unique
+  discount  Float
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @default(now()) @updatedAt
+  donHangs  DonHang[]
+}
+
+model GiaoHang {
+  id                    String         @id @default(uuid())
+  donHangId             String         @unique
+  shippingAddress       String
+  shippingMethod        String?
+  trackingNumber        String?
+  shippingStatus        ShippingStatus
+  shippingFee           Float
+  createdAt             DateTime       @default(now())
+  estimatedDeliveryDate DateTime?
+  donHang               DonHang        @relation(fields: [donHangId], references: [id], onDelete: Cascade)
+}
+
+model PhieuGiaoHang {
+  id             String         @id @default(uuid())
+  donHangId      String         @unique
+  shippingStatus ShippingStatus
+  trackingCode   String?
+  estimatedDate  DateTime?
+  deliveryDate   DateTime?
+  isReturned     Boolean        @default(false)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @default(now()) @updatedAt
+  donHang        DonHang        @relation(fields: [donHangId], references: [id], onDelete: Cascade)
+}
+
+model SanPhamDatMay {
+  id                String             @id @default(uuid())
+  name              String
+  description       String?
+  price             Float
+  imageUrl          String?
+  createdAt         DateTime           @default(now())
+  chiTietDonHangs   ChiTietDonHang[]
+  chiTietVaiSuDungs ChiTietVaiSuDung[]
+  gioHangItems      GioHangItem[]
+}
+
+model MauThietKe {
+  id          String   @id @default(uuid())
+  createdBy   String?
+  name        String
+  description String?
+  imageUrl    String?
+  createdAt   DateTime @default(now())
+  user        User?    @relation(fields: [createdBy], references: [id])
+}
+
+model ChiTietVaiSuDung {
+  id        String        @id @default(uuid())
+  sanPhamId String
+  vaiId     String
+  quantity  Float
+  createdAt DateTime      @default(now())
+  sanPham   SanPhamDatMay @relation(fields: [sanPhamId], references: [id], onDelete: Cascade)
+  vai       Vai           @relation(fields: [vaiId], references: [id], onDelete: Cascade)
+}
+
+model Vai {
+  id                String             @id @default(uuid())
+  name              String
+  description       String?
+  pricePerMeter     Float
+  createdAt         DateTime           @default(now())
+  chiTietVaiSuDungs ChiTietVaiSuDung[]
+  khoes             Kho[]
+}
+
+model Kho {
+  id        String   @id @default(uuid())
+  vaiId     String
+  quantity  Float
+  location  String?
+  createdAt DateTime @default(now())
+  vai       Vai      @relation(fields: [vaiId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  CUSTOMER
+  ADMIN
+}
+
+enum LichHenStatus {
+  PENDING
+  CONFIRMED
+  CANCELLED
+}
+
+enum DonHangStatus {
+  PENDING
+  PAID
+  SHIPPED
+  COMPLETED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  ZALOPAY
+  COD
+  BANK_TRANSFER
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+}
+
+enum PaymentType {
+  FULL_PAYMENT
+  DEPOSIT
+}
+
+enum ShippingStatus {
+  PENDING
+  IN_TRANSIT
+  DELIVERED
+  FAILED
+}
