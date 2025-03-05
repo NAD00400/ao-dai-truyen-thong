@@ -1,19 +1,46 @@
 "use client";
 import { FaCartArrowDown } from "react-icons/fa";
-import { TbArrowMoveRight } from "react-icons/tb";
-import { TbArrowMoveLeft } from "react-icons/tb";
+import { TbArrowMoveLeft, TbArrowMoveRight } from "react-icons/tb";
 
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight, MapPin } from "lucide-react";
+import { useEffect, useState } from "react";
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
-
+const videos = [
+  {
+    id: 1,
+    src: "https://www.youtube.com/embed/Q_MndNHZRws?si=i9v0Qfbys2vEfrxV",
+    thumbnail: "/shop/DALL·E 2025-03-04 14.13.20 - A modern and elegant traditional Vietnamese áo dài boutique interior. The store has a minimalist yet luxurious desi.webp",
+  },
+  {
+    id: 2,
+    src: "https://www.youtube.com/embed/NbzajhnKjms?si=L6s2RCMN9fig7G2y",
+    thumbnail: "/shop/DALL·E 2025-03-04 14.13.20 - A modern and elegant traditional Vietnamese áo dài boutique interior. The store has a minimalist yet luxurious desi.webp",
+  },
+  {
+    id: 3,
+    src: "https://www.youtube.com/embed/Q_MndNHZRws?si=i9v0Qfbys2vEfrxV",
+    thumbnail: "/shop/DALL·E 2025-03-04 14.13.20 - A modern and elegant traditional Vietnamese áo dài boutique interior. The store has a minimalist yet luxurious desi.webp",
+  },
+  {
+    id: 4,
+    src: "https://www.youtube.com/embed/NbzajhnKjms?si=L6s2RCMN9fig7G2y",
+    thumbnail: "/shop/DALL·E 2025-03-04 14.13.20 - A modern and elegant traditional Vietnamese áo dài boutique interior. The store has a minimalist yet luxurious desi.webp",
+  },
+  {
+    id: 5,
+    src: "https://www.youtube.com/embed/Q_MndNHZRws?si=i9v0Qfbys2vEfrxV",
+    thumbnail: "/shop/DALL·E 2025-03-04 14.13.20 - A modern and elegant traditional Vietnamese áo dài boutique interior. The store has a minimalist yet luxurious desi.webp",
+  },
+ 
+  // Thêm video khác nếu cần
+];
 export default function LandingPage() {
 
   const [categories, setCategories] = useState<any[]>([]);
@@ -21,6 +48,22 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [scrollPositions, setScrollPositions] = useState<{ [key: string]: number }>({});
+   const [selectedVideo, setSelectedVideo] = useState(videos[0]);
+    const [isEnlarged, setIsEnlarged] = useState(false);
+  
+    // Hàm toggle phóng to video (nếu bạn muốn ấn vào video để phóng to)
+    const toggleEnlarge = () => {
+      setIsEnlarged((prev) => !prev);
+    };
+  
+  // Định nghĩa thứ tự mong muốn cho các danh mục
+    const desiredOrder = ["party-ao-dai", "office-ao-dai", "traditional-ao-dai", "family-ao-dai", "student-ao-dai"];
+    // Sau khi fetch xong, sắp xếp danh mục theo thứ tự mong muốn
+    const sortedCategories = categories.slice().sort((a, b) => {
+      // So sánh theo tên (đã chuyển thành chữ thường để khớp với mảng desiredOrder)
+      return desiredOrder.indexOf(a.categorySlug.toLowerCase()) - desiredOrder.indexOf(b.categorySlug.toLowerCase());
+
+    });
 
   const fetchData = async () => {
     try {
@@ -154,122 +197,167 @@ export default function LandingPage() {
           </button>
         </div>
       </section>
-        {/* Video Section */}
-        <motion.section
-        initial={{ opacity: 0, y: 50 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8 }}
-        className="px-6 py-12 text-center"
-      >
-        <h2 className="text-4xl font-bold text-[#8B0000] mb-6">Video Áo Dài</h2>
-        <p className="text-lg text-gray-700 max-w-2xl mx-auto italic mb-8">
-          Xem các mẫu áo dài đẹp nhất qua video thực tế.
-        </p>
-        <div
-          className="relative w-full h-full max-w-3xl mx-auto overflow-hidden rounded-xl shadow-lg"
-          style={{ aspectRatio: "16 / 9" }}
-        >
-          <iframe
-            className="w-full h-full"
-            src="https://www.youtube.com/embed/Q_MndNHZRws?si=i9v0Qfbys2vEfrxV"
-            allowFullScreen
-          ></iframe>
-        </div>
-      </motion.section>
+        
 
         
 
       {/* Sản phẩm đặt may Section */}
       
-      <div className="px-4 md:px-8 lg:px-12 py-6 space-y-10">
+      <div className="px-4  md:px-8 lg:px-12 pt-16 pb-6 space-y-10">
+      <div className="text-center">
+        <h3 className="text-4xl font-bold text-[#8B0000] mb-6">Sản phẩm của chúng tôi</h3>
+        <p className="mt-4 text-lg px-36 text-red-950 w-full">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellat sunt quibusdam natus unde repudiandae, voluptates a consequatur doloribus aperiam expedita eligendi fugit in quaerat voluptatum quas assumenda cupiditate recusandae porro!</p>
+  
+      </div>
         {loading ? (
           <Skeleton className="h-40 w-full rounded-lg" />
         ) : (
-          categories.map((category) => {
+          sortedCategories.map((category) => {
             const categoryProducts = products.filter((p) => p.categoryId === category.id);
             const startIndex = scrollPositions[category.id] || 0;
             const visibleProducts = categoryProducts.slice(startIndex, startIndex + 3);
 
             return (
               <div
-                key={category.id}
-                className="  p-6 rounded-3xl grid grid-cols-1 lg:grid-cols-3 gap-6 transition-all duration-300 "
-              >
-                {/* bg-[#003049] shadow-lg */}
-                {/* Ảnh danh mục */}
-                <div className="relative w-full h-[355] hover:shadow-xl rounded-lg overflow-hidden col-span-1 group">
-                  <Image
-                    src={category.imageUrl}
-                    alt={category.name}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-lg transform transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent flex items-end p-4">
-                    <h2 className="text-2xl font-bold text-yellow-100">{category.name}</h2>
-                  </div>
-                </div>
-              
-                {/* Danh sách sản phẩm */}
-                <div className=" col-span-2 flex flex-col space-y-4">
-                  <div className="flex gap-x-4 overflow-hidden">
-                    {visibleProducts.map((product) => (
-                      <Card
-                        key={product.id}
-                        className="w-1/3 min-w-[200px] border  border-gray-300 hover:border-gray-500 transition-all duration-300 rounded-lg"
-                      >
-                        <CardContent className="relative w-full aspect-[4/3] rounded-t-lg overflow-hidden">
-                          <Image
-                            src={product.imageUrl}
-                            alt={product.name}
-                            layout="fill"
-                            objectFit="cover"
-                            className="rounded-t-lg transition-transform duration-300 hover:scale-105"
-                          />
-                        </CardContent>
-                        <div className="p-3">
-                          <h3 className="text-lg text-[#780000] font-semibold">{product.name}</h3>
-                          <p className={`text-lg  ${product.price ? "text-[#003049]" : "text-gray-500"}`}>
-                            {product.price ? `${product.price.toLocaleString()} VND` : "Giá liên hệ"}
-                          </p>
-                        </div>
-                        <CardFooter className="flex justify-start gap-2 p-3">
-                          <Button variant="outline" className="bg-[#003049] text-[#FDF0D5] hover:bg-neutral-300 transition-all duration-300" size="sm">
-                            Xem chi tiết
-                          </Button>
-                          <Button variant="outline" className="bg-[#003049] text-[#FDF0D5] hover:bg-neutral-300 transition-all duration-300" size="sm">
-                          <FaCartArrowDown />
-
-                          </Button>
-                        </CardFooter>
-                      </Card>
-                    ))}
-                  </div>
-
-                  {/* Nút lướt trái/phải */}
-                  <div className="flex justify-center space-x-4 mt-2">
-                    <Button
-                      className="bg-gray-400 text-[#FDF0D5] rounded-full p-2 shadow-md hover:bg-gray-400 transition-all h-3 duration-300"
-                      onClick={() => handleScroll(category.id, "left")}
-                      disabled={startIndex === 0}
-                    >
-                      <TbArrowMoveLeft />
-                    </Button>
-                    <Button
-                      className="bg-gray-300 text-[#FDF0D5] rounded-full p-2 shadow-md hover:bg-gray-400 transition-all h-3 duration-300"
-                      onClick={() => handleScroll(category.id, "right")}
-                      disabled={startIndex + 3 >= categoryProducts.length}
-                    >
-                      <TbArrowMoveRight />
-                    </Button>
-                  </div>
+              key={category.id}
+              className="p-6 rounded-3xl grid grid-cols-1 lg:grid-cols-3 gap-6 transition-all duration-300"
+            >
+              {/* Ảnh danh mục */}
+              <div className="relative w-full h-64 md:h-[355px] hover:shadow-xl rounded-lg overflow-hidden col-span-1 group">
+                <Image
+                  src={category.imageUrl}
+                  alt={category.name}
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-lg transform transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent flex items-end p-4">
+                  <h2 className="text-2xl font-bold text-yellow-100">{category.name}</h2>
                 </div>
               </div>
+            
+              {/* Danh sách sản phẩm */}
+              <div className="col-span-1 lg:col-span-2 flex flex-col space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  {visibleProducts.map((product) => (
+                    <Card
+                      key={product.id}
+                      className="min-w-[200px] border border-gray-300 hover:border-gray-500 transition-all duration-300 rounded-lg"
+                    >
+                      <CardContent className="relative w-full aspect-[4/3] rounded-t-lg overflow-hidden">
+                        <Image
+                          src={product.imageUrl}
+                          alt={product.name}
+                          layout="fill"
+                          objectFit="cover"
+                          className="rounded-t-lg transition-transform duration-300 hover:scale-105"
+                        />
+                      </CardContent>
+                      <div className="p-3">
+                        <h3 className="text-lg text-[#780000] font-semibold">
+                          {product.name}
+                        </h3>
+                        <p className={`text-lg ${product.price ? "text-[#003049]" : "text-gray-500"}`}>
+                          {product.price ? `${product.price.toLocaleString()} VND` : "Giá liên hệ"}
+                        </p>
+                      </div>
+                      <CardFooter className="flex justify-start gap-2 p-3">
+                        <Button
+                          variant="outline"
+                          className="bg-[#003049] text-[#FDF0D5] hover:bg-neutral-300 transition-all duration-300"
+                          size="sm"
+                        >
+                          Xem chi tiết
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="bg-[#003049] text-[#FDF0D5] hover:bg-neutral-300 transition-all duration-300"
+                          size="sm"
+                        >
+                          <FaCartArrowDown />
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  ))}
+                </div>
+            
+                {/* Nút lướt trái/phải */}
+                <div className="flex justify-center space-x-4 mt-2">
+                  <Button
+                    className="bg-gray-400 text-[#FDF0D5] rounded-full p-2 shadow-md hover:bg-gray-400 transition-all h-3 duration-300"
+                    onClick={() => handleScroll(category.id, "left")}
+                    disabled={startIndex === 0}
+                  >
+                    <TbArrowMoveLeft />
+                  </Button>
+                  <Button
+                    className="bg-gray-300 text-[#FDF0D5] rounded-full p-2 shadow-md hover:bg-gray-400 transition-all h-3 duration-300"
+                    onClick={() => handleScroll(category.id, "right")}
+                    disabled={startIndex + 3 >= categoryProducts.length}
+                  >
+                    <TbArrowMoveRight />
+                  </Button>
+                </div>
+              </div>
+            </div>
+            
             );
           })
         )}
-      </div>
+      </div >
+        {/* Video Section */}
+        <motion.section
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="px-6 py-12 text-center"
+            >
+              <h2 className="text-4xl font-bold text-[#8B0000] mb-6">Video Áo Dài</h2>
+              <p className="text-lg text-gray-700 max-w-2xl mx-auto italic mb-8">
+                Xem các mẫu áo dài đẹp nhất qua video thực tế.
+              </p>
+        
+              {/* Khung video chính */}
+              <div
+                className={`relative mx-auto overflow-hidden rounded-xl shadow-lg transition-transform duration-300 ${
+                  isEnlarged ? "max-w-5xl" : "max-w-3xl"
+                }`}
+                style={{ aspectRatio: "16 / 9" }}
+                onClick={toggleEnlarge}
+              >
+                <iframe
+                  className="w-full h-full"
+                  src={selectedVideo.src}
+                  allowFullScreen
+                ></iframe>
+              </div>
+        
+              {/* Danh sách thumbnail video */}
+              <div className="mt-6 flex justify-center gap-4 flex-wrap">
+                {videos.map((video, index) => (
+                  <div
+                    key={video.id}
+                    className={`cursor-pointer border-2 rounded-lg overflow-hidden transition-all duration-300 ${
+                      video.id === selectedVideo.id ? "border-blue-500" : "border-transparent"
+                    }`}
+                    onClick={() => setSelectedVideo(video)}
+                  >
+                    <Image
+                      src={video.thumbnail}
+                      alt={`Thumbnail video ${index + 1}`}
+                      width={150}
+                      height={84}
+                      objectFit="cover"
+                    />
+                  </div>
+                ))}
+              </div>
+        
+              <p className="mt-2 text-sm text-gray-600">
+                {isEnlarged ? "Nhấn để thu nhỏ video" : "Nhấn vào video để phóng to"}
+              </p>
+            </motion.section>
         {/* Đánh giá Section */}
         <motion.div
           initial="hidden"
@@ -286,7 +374,7 @@ export default function LandingPage() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="px-6 py-12 text-center"
+            className="px-20 pt-12 pb-24 text-center "
           >
             <h2 className="text-4xl font-bold text-[#8B0000] mb-6">
               Khách Hàng Đánh Giá
