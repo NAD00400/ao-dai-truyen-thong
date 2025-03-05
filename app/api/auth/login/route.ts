@@ -5,7 +5,7 @@ import admin from "../../../lib/firebase-admin";
 export async function POST(req: Request) {
   try {
     const { token } = await req.json();
-    console.log("🛠️ Token received:", token);
+
 
     const decodedToken = await admin.auth().verifyIdToken(token);
     
