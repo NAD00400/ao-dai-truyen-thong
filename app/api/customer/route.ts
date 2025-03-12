@@ -1,16 +1,38 @@
-import { NextResponse } from "next/server";
-import { prisma } from "../../lib/prisma"; 
+import { NextRequest, NextResponse } from 'next/server';
+import { PrismaClient } from '@prisma/client';
 
-// tạo mới khách hàng
-export async function POST(req: Request) {
+const prisma = new PrismaClient();
+
+export async function GET() {
   try {
-    const { userId, phone, address } = await req.json();
-    // Kiểm tra thông tin cần thiết
+    const customers = await prisma.customer.findMany();
+    return NextResponse.json(customers, { status: 200 });
+  } catch (error: any) {
+    console.error("Server error:", error);
+    return NextResponse.json(
+      { error: 'Server error', details: error instanceof Error ? error.message : 'Unknown error' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    // Lấy dữ liệu từ form-data
+    const formData = await req.formData();
+
+    // Lấy trường bắt buộc: userId (model Customer yêu cầu userId là unique)
+    const userId = formData.get("userId")?.toString() || "";
     if (!userId) {
-      return NextResponse.json({ error: "userId là bắt buộc" }, { status: 400 });
+      return NextResponse.json({ error: "Missing required field: userId" }, { status: 400 });
     }
 
-    const customer = await prisma.khachHang.create({
+    // Lấy các trường tùy chọn
+    const phone = formData.get("phone")?.toString() || null;
+    const address = formData.get("address")?.toString() || null;
+
+    // Tạo khách hàng mới
+    const newCustomer = await prisma.customer.create({
       data: {
         userId,
         phone,
@@ -18,38 +40,12 @@ export async function POST(req: Request) {
       },
     });
 
-    return NextResponse.json({ customer });
-  } catch (error) {
-    console.error("Lỗi tạo khách hàng:", error);
-    return NextResponse.json({ error: "Lỗi khi tạo khách hàng!" }, { status: 500 });
+    return NextResponse.json(newCustomer, { status: 201 });
+  } catch (error: any) {
+    console.error("Server error:", error);
+    return NextResponse.json(
+      { error: "Server error", details: error instanceof Error ? error.message : "Unknown error" },
+      { status: 500 }
+    );
   }
 }
-// lấy danh sách khách hàng 
-export async function GET(req: Request, { params }: { params: { userId: string } }) {
-  try {
-    const { userId } = params;
-
-    const customer = await prisma.khachHang.findUnique({
-      where: { userId },
-      include: {
-        soDo: true,
-        gioHangs: true,
-        lichHenDatMays: true,
-        donHangs: true,
-      },
-    });
-
-    if (!customer) {
-      return NextResponse.json({ error: "Không tìm thấy khách hàng" }, { status: 404 });
-    }
-
-    return NextResponse.json({ customer });
-  } catch (error) {
-    console.error("Lỗi lấy thông tin khách hàng:", error);
-    return NextResponse.json({ error: "Lỗi khi lấy thông tin khách hàng!" }, { status: 500 });
-  }
-}
-
-
-  
-  

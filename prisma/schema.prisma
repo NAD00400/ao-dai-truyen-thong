@@ -16,7 +16,7 @@ model User {
   updatedAt     DateTime       @default(now()) @updatedAt
   avatar        String?
   firebaseId    String         @unique
-  customDesigns CustomDesign[]
+  customDesigns CustomDesign[] 
   customer      Customer?
 }
 
@@ -74,12 +74,14 @@ model CartItem {
 
 model Appointment {
   id              String            @id @default(uuid())
-  customerId      String
+  customerId      String?
   appointmentDate DateTime
   notes           String?
   status          AppointmentStatus
   createdAt       DateTime          @default(now())
-  customer        Customer          @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  sdt             String?
+  guestName_      String?           @default("visitors") @map("guestName ")
+  customer        Customer?         @relation(fields: [customerId], references: [id])
 }
 
 model Order {
@@ -206,7 +208,7 @@ model Category {
   id             String          @id @default(uuid())
   name           String
   imageUrl       String          @default("aaa")
-  categorySlug   String?  @unique @map("category_slug")
+  categorySlug   String?         @unique @map("category_slug")
   customProducts CustomProduct[]
   vouchers       Voucher[]
 }

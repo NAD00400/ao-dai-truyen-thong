@@ -1,30 +1,31 @@
-"use client"
-import { Playfair_Display } from 'next/font/google';
-import "./globals.css";
-import { useLoadUser } from "./storage-local/authStore";
+"use client";
+import { Playfair_Display } from "next/font/google";
+import { useLoadUser } from "./(public)/storage-local/authStore";
 import Footer from "./Footer";
-import Header from "./Header";
+import "./globals.css";
+import { default as Header, default as RadialMenu } from "./Header";
+import { CartProvider } from "./context/cartContext";
+
+
 const playfairDisplay = Playfair_Display({
-  subsets: ['latin'],
-  variable: '--playfair-display', // Đặt tên cho CSS variable
+  subsets: ["latin"],
+  variable: "--playfair-display",
 });
 
-export default function RootLayout({
-  
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  
-  useLoadUser();
-  
+export default function RootLayout({children,}: {children: React.ReactNode;}) {
+
+  useLoadUser(); 
+
   return (
-    <html lang="en">
-      <body className={`${playfairDisplay.className} font-variable bg-[#fdf0d5]`} >
-        <Header></Header>
-        {children }
-        <Footer ></Footer>
-      </body>
-    </html>
+      <html lang="en" className={playfairDisplay.className}>
+        <body className="font-variable bg-[#fdf0d5]">
+        <CartProvider>
+          <Header />
+          <RadialMenu/>
+            {children}          
+          <Footer />
+          </CartProvider>
+        </body>
+      </html>
   );
 }

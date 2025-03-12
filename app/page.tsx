@@ -12,6 +12,8 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+
 const videos = [
   {
     id: 1,
@@ -42,15 +44,18 @@ const videos = [
   // Thêm video khác nếu cần
 ];
 export default function LandingPage() {
-
   const [categories, setCategories] = useState<any[]>([]);
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [scrollPositions, setScrollPositions] = useState<{ [key: string]: number }>({});
-   const [selectedVideo, setSelectedVideo] = useState(videos[0]);
-    const [isEnlarged, setIsEnlarged] = useState(false);
-  
+  const [selectedVideo, setSelectedVideo] = useState(videos[0]);
+  const [isEnlarged, setIsEnlarged] = useState(false);
+  const route = useRouter()
+
+  const handelDetail=(id:string)=>{
+    route.push(`/products/product-detail/${id}`);
+  }
     // Hàm toggle phóng to video (nếu bạn muốn ấn vào video để phóng to)
     const toggleEnlarge = () => {
       setIsEnlarged((prev) => !prev);
@@ -127,8 +132,8 @@ export default function LandingPage() {
         <Image
           src="/shop/DALL·E 2025-03-04 14.15.30 - A modern and elegant traditional Vietnamese áo dài store interior. The room has a warm, luxurious ambiance with wooden .webp" // Đặt đường dẫn đúng với ảnh cửa hàng của bạn
           alt="Cửa hàng"
-          layout="fill"
-          objectFit="cover"
+          fill
+          style={{ objectFit: "cover" }}
           className="opacity-80" // Điều chỉnh độ mờ của ảnh
         />
       </div>
@@ -185,7 +190,7 @@ export default function LandingPage() {
           {/* Navigation Buttons */}
           <button
             onClick={prevSlide}
-            className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black/70 transition-opacity"
+            className="absolute top-1/2  left-4 transform -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black/70 transition-opacity"
           >
             <ChevronLeft size={24} />
           </button>
@@ -227,8 +232,8 @@ export default function LandingPage() {
                 <Image
                   src={category.imageUrl}
                   alt={category.name}
-                  layout="fill"
-                  objectFit="cover"
+                  fill 
+                  style={{ objectFit: "cover" }} 
                   className="rounded-lg transform transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent flex items-end p-4">
@@ -248,8 +253,8 @@ export default function LandingPage() {
                         <Image
                           src={product.imageUrl}
                           alt={product.name}
-                          layout="fill"
-                          objectFit="cover"
+                          fill // ✅ Thay thế layout="fill"
+                          style={{ objectFit: "cover" }} 
                           className="rounded-t-lg transition-transform duration-300 hover:scale-105"
                         />
                       </CardContent>
@@ -263,6 +268,7 @@ export default function LandingPage() {
                       </div>
                       <CardFooter className="flex justify-start gap-2 p-3">
                         <Button
+                          onClick={()=>handelDetail(product.id)}
                           variant="outline"
                           className="bg-[#003049] text-[#FDF0D5] hover:bg-neutral-300 transition-all duration-300"
                           size="sm"

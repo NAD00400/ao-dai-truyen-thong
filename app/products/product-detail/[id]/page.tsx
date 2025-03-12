@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-
+import { useCart } from "@/app/context/cartContext";
 
 interface CustomProduct {
   id: string;
@@ -26,12 +26,29 @@ interface CustomProduct {
 }
 
 const ProductDetail = () => {
+  const { addToCart } = useCart();
   const { id } = useParams();
   const [product, setProduct] = useState<CustomProduct | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState<number>(1);
 
-  const [quantity, setQuantity] = useState(1);
+  const handleAddToCart = () => {
+    if (!product?.id || !product?.name || product?.price === undefined) {
+      console.error("Sản phẩm thiếu thông tin cần thiết!");
+      return;
+    }
+  
+    if (quantity > 0) {
+      addToCart({
+        id: product.id,
+        name: product.name, 
+        price: product.price,
+        quantity ,
+      });
+    }
+  };
+  
 
   const handleIncrease = () => setQuantity((prev) => prev + 1);
   const handleDecrease = () => setQuantity((prev) => (prev > 1 ? prev - 1 : 1));
@@ -135,7 +152,7 @@ const ProductDetail = () => {
                   </div>
                   <Button
                     className="bg-[#003049]  text-white w-full py-3 text-lg font-semibold"
-                    onClick={() => console.log("Thêm vào giỏ hàng", product)}
+                    onClick={handleAddToCart}
                   >
                     Thêm vào giỏ hàng
                   </Button>

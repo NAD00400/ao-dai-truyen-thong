@@ -1,6 +1,8 @@
 // app/auth/page.tsx
+"use client";
+import AuthButton from "@/app/account/ui/component/AuthButton";
 
-import AuthButton from "./ui/component/AuthButton";
+
 
 export default function AuthPage() {
   return (

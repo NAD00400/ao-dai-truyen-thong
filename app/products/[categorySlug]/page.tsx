@@ -6,9 +6,10 @@ import { FaCartArrowDown } from "react-icons/fa";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import ImagePanel from "./component/panel";
+import ImagePanel from "../../../components/ux/panel";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useCart } from "@/app/context/cartContext";
 
 const PAGE_SIZE =6;
 async function getProducts(categorySlug: string) {
@@ -44,6 +45,7 @@ const items = [
 ];
 
 export default function CategoryPage() {
+  const { addToCart } = useCart();
   const params = useParams();
   const [products, setProducts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -84,8 +86,8 @@ export default function CategoryPage() {
                 <Image
                   src={product.imageUrl}
                   alt={product.name}
-                  layout="fill"
-                  objectFit="cover"
+                  fill // ✅ Thay thế layout="fill"
+                  style={{ objectFit: "cover" }} 
                   className="rounded-t-lg transition-transform duration-300 hover:scale-105"
                 />
               </CardContent>
@@ -99,7 +101,7 @@ export default function CategoryPage() {
                 <Button variant="outline" onClick={()=>handelDetail(product.id)} className="bg-[#003049] text-[#FDF0D5] hover:bg-neutral-300 transition-all duration-300" size="sm">
                   Xem chi tiết
                 </Button>
-                <Button variant="outline" className="bg-[#003049] text-[#FDF0D5] hover:bg-neutral-300 transition-all duration-300" size="sm">
+                <Button variant="outline" onClick={() => addToCart(product)} className="bg-[#003049] text-[#FDF0D5] hover:bg-neutral-300 transition-all duration-300" size="sm">
                   <FaCartArrowDown />
                 </Button>
               </CardFooter>

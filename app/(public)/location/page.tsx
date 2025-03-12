@@ -12,8 +12,8 @@ export default function DiaChiCuaHang() {
         <Image
           src="/shop/image.png" // Đặt đường dẫn đúng với ảnh cửa hàng của bạn
           alt="Cửa hàng"
-          layout="fill"
-          objectFit="cover"
+          fill // ✅ Thay thế layout="fill"
+          style={{ objectFit: "cover" }} 
           className="opacity-80" // Điều chỉnh độ mờ của ảnh
         />
       </div>
