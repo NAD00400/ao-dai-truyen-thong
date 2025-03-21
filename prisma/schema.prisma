@@ -7,290 +7,231 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            String         @id @default(uuid())
-  email         String         @unique
-  fullName      String?
-  role          Role           @default(CUSTOMER)
-  createdAt     DateTime       @default(now())
-  updatedAt     DateTime       @default(now()) @updatedAt
-  avatar        String?
-  firebaseId    String         @unique
-  customDesigns CustomDesign[] 
-  customer      Customer?
+model chi_tiet_don_hang {
+  so_luong             Int
+  gia_tien             Float
+  ma_don_hang          String?        @db.Uuid
+  ma_chi_tiet_don_hang String         @id @db.Uuid
+  ma_san_pham          String?        @db.Uuid
+  ma_so_do             String?        @db.Uuid
+  so_do_dat_may        so_do_dat_may? @relation(fields: [ma_so_do], references: [ma_so_do], onDelete: NoAction, onUpdate: NoAction, map: "constraint_1")
 }
 
-model Customer {
-  id           String               @id @default(uuid())
-  userId       String               @unique
-  phone        String?
-  address      String?
-  createdAt    DateTime             @default(now())
-  updatedAt    DateTime             @default(now()) @updatedAt
-  appointments Appointment[]
-  user         User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  measurements CustomerMeasurement?
-  orders       Order[]
-  shoppingCart ShoppingCart?
+model chi_tiet_gio_hang {
+  ma_san_pham_dat_may  String
+  so_luong             Int
+  ma_chi_tiet_don_hang String  @id @db.Uuid
+  ma_gio_hang          String? @db.Uuid
 }
 
-model CustomerMeasurement {
-  id                String   @id @default(uuid())
-  customerId        String   @unique
-  chestSize         Float?
-  neckSize          Float?
-  bustSize          Float?
-  waistSize         Float?
-  hipSize           Float?
-  shoulderWidth     Float?
-  waistLength       Float?
-  armLength         Float?
-  armCircumference  Float?
-  pantLength        Float?
-  calfCircumference Float?
-  headCircumference Float?
-  createdAt         DateTime @default(now())
-  customer          Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+model danh_muc {
+  ma_danh_muc      String             @id @db.Uuid
+  danh_muc_slug    String
+  url_image        String
+  ten_danh_muc     String
+  san_pham_dat_may san_pham_dat_may[]
 }
 
-model ShoppingCart {
-  id         String     @id @default(uuid())
-  customerId String     @unique
-  createdAt  DateTime   @default(now())
-  updatedAt  DateTime   @default(now()) @updatedAt
-  cartItems  CartItem[]
-  customer   Customer   @relation(fields: [customerId], references: [id], onDelete: Cascade)
+model don_hang {
+  ngay_dat_hang          DateTime    @default(now())
+  trang_thai_don_hang    String
+  tong_tien_don_hang     Float
+  ngay_tao               DateTime    @default(now())
+  ghi_chu                String?
+  phuong_thuc_thanh_toan String
+  thanh_toan_thanh_cong  Boolean
+  ngay_cap_nhat          DateTime    @default(now())
+  ma_khach_hang          String?     @db.Uuid
+  ma_don_hang            String      @id @db.Uuid
+  khach_hang             khach_hang? @relation(fields: [ma_khach_hang], references: [ma_khach_hang], onDelete: NoAction, onUpdate: NoAction, map: "fk_tb_khach_hang")
+  giao_hang              giao_hang[]
 }
 
-model CartItem {
-  id             String        @id @default(uuid())
-  shoppingCartId String
-  productId      String
-  quantity       Int
-  price          Float
-  product        CustomProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
-  shoppingCart   ShoppingCart  @relation(fields: [shoppingCartId], references: [id], onDelete: Cascade)
+model giao_hang {
+  trang_thai        String
+  phi_van_chuyen    String?
+  dia_chi_lay_hang  String
+  dia_chi_giao_hang String
+  ghi_chu           String?
+  ngay_giao_du_kien DateTime?
+  ngay_giao_thuc_te DateTime?
+  ma_don_hang        String    @db.Uuid
+  ma_van_don        String?
+  ly_do_huy         String?
+  ngay_tao          DateTime? @default(now()) @db.Timestamp(6)
+  ngay_cap_nhat     DateTime? @default(now()) @db.Timestamp(6)
+  ma_giao_hang      Int       @id @default(autoincrement())
+  quan_nhan_hang    String?
+  tinh_nhan_hang    String?
+  phuong_nhan_hang  String?
+  sdt_nhan_hang     String?
+  tinh_giao_hang    String?
+  phuong_giao_hang  String?
+  quan_giao_hang    String?
+  sdt_giao_hang     String?
+  don_hang          don_hang  @relation(fields: [ma_don_hang ], references: [ma_don_hang], onDelete: NoAction, onUpdate: NoAction, map: "fk_tb_don_hang")
 }
 
-model Appointment {
-  id              String            @id @default(uuid())
-  customerId      String?
-  appointmentDate DateTime
-  notes           String?
-  status          AppointmentStatus
-  createdAt       DateTime          @default(now())
-  sdt             String?
-  guestName_      String?           @default("visitors") @map("guestName ")
-  customer        Customer?         @relation(fields: [customerId], references: [id])
+model gio_hang {
+  ma_gio_hang   String      @id(map: "ShoppingCart_pkey")
+  customerId    String
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @default(now())
+  ma_khach_hang String?     @db.Uuid
+  khach_hang    khach_hang? @relation(fields: [ma_khach_hang], references: [ma_khach_hang], onDelete: NoAction, onUpdate: NoAction, map: "fk_tb_khach_hang")
 }
 
-model Order {
-  id               String           @id @default(uuid())
-  customerId       String
-  orderDate        DateTime         @default(now())
-  status           OrderStatus
-  totalAmount      Float
-  createdAt        DateTime         @default(now())
-  shippingAddress  String
-  notes            String?
-  shippingFee      Float?
-  paymentMethod    String
-  measurementId    String?
-  paymentCompleted Boolean
-  updatedAt        DateTime         @default(now()) @updatedAt
-  voucherCode      String?
-  customer         Customer         @relation(fields: [customerId], references: [id], onDelete: Cascade)
-  voucher          Voucher?         @relation(fields: [voucherCode], references: [code])
-  orderDetails     OrderDetail[]
-  payment          Payment?
-  paymentReceipt   PaymentReceipt?
-  shippingInfo     ShippingInfo?
-  shippingReceipt  ShippingReceipt?
+model hoa_don {
+  invoice_number          String?
+  tien_can_thanh_toan     Decimal?  @db.Decimal
+  tien_da_thanh_toan      Decimal?  @db.Decimal
+  thue                    Decimal?  @db.Decimal
+  ngay_phat_hanh          DateTime? @db.Date
+  ngay_het_han_thanh_toan DateTime? @db.Date
+  ngay_cap_nhat           DateTime? @db.Date
+  trang_thanh_toan        String?
+  ma_hoa_don              String    @id @db.Uuid
+  ma_don_hang             String?   @db.Uuid
 }
 
-model OrderDetail {
-  id        String        @id @default(uuid())
-  orderId   String
-  productId String
-  quantity  Int
-  price     Float
-  createdAt DateTime      @default(now())
-  order     Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  product   CustomProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+model khach_hang {
+  ma_khach_hang      String      @id(map: "khach_pkey") @db.Uuid
+  ma_nguoi_dung      String?
+  so_dien_thoai      String?
+  dia_chi_khach_hang String?
+  don_hang           don_hang[]
+  gio_hang           gio_hang[]
+  nguoi_dung         nguoi_dung? @relation(fields: [ma_nguoi_dung], references: [ma_nguoi_dung], onDelete: NoAction, onUpdate: NoAction, map: "fk_tb_nguoi_dung")
+
+  @@index([ma_nguoi_dung], map: "index_1", type: Hash)
 }
 
-model Payment {
-  id            String        @id @default(uuid())
-  orderId       String        @unique
-  paymentMethod PaymentMethod
-  paymentStatus PaymentStatus
-  transactionId String?       @unique
-  createdAt     DateTime      @default(now())
-  paymentDate   DateTime      @default(now())
-  paymentType   PaymentType
-  order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+model khuyen_mai {
+  ma_khuyen_mai      Int       @id @default(autoincrement())
+  phan_tram_giam_gia String?
+  ngay_ap_dung       DateTime? @db.Date
+  ngay_het_han       DateTime? @db.Date
 }
 
-model PaymentReceipt {
-  id            String        @id @default(uuid())
-  orderId       String        @unique
-  paymentMethod PaymentMethod
-  paymentType   PaymentType
-  amount        Float
-  isRefunded    Boolean       @default(false)
-  refundAmount  Float?
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @default(now()) @updatedAt
-  order         Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  model lich_hen_khach_hang {
+    ma_lich_hen   String    @id(map: "lic_pkey") @db.Uuid
+    ma_khach_hang String?   @db.Uuid
+    ngay_hen      DateTime? @db.Timestamp(6)
+    ngay_tao      DateTime? @db.Timestamp(6)
+    trang         String?
+  }
+
+model nguoi_dung {
+  ma_nguoi_dung     String       @id(map: "User_pkey")
+  email_nguoi_dung  String       @unique(map: "User_email_key")
+  ten_nguoi_dung    String?
+  vai_tro           VaiTro       @default(KHACH_HANG)
+  ngay_tao          DateTime     @default(now())
+  ngay_cap_nhat     DateTime     @default(now())
+  link_anh_dai_dien String?
+  firebaseId        String       @unique(map: "User_firebaseId_key")
+  khach_hang        khach_hang[]
 }
 
-model ShippingInfo {
-  id                String         @id @default(uuid())
-  orderId           String         @unique
-  shippingAddress   String
-  shippingMethod    String?
-  trackingNumber    String?
-  shippingStatus    ShippingStatus
-  shippingFee       Float
-  createdAt         DateTime       @default(now())
-  estimatedDelivery DateTime?
-  order             Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+model phu_lieu_may_mac {
+  vai_chinh     String
+  chi           String?
+  nut           String?
+  ngay_tao      DateTime @default(now())
+  ma_phu_lieu   String   @id(map: "component_pkey") @db.Uuid
+  day_keo       String?
+  ngay_cap_nhat DateTime @default(now()) @db.Timestamp(6)
+  Ren           String?
+  vai_lot       String?
+  hat_cuom      String?
+  mech_dung     String?
 }
 
-model ShippingReceipt {
-  id             String         @id @default(uuid())
-  orderId        String         @unique
-  shippingStatus ShippingStatus
-  trackingCode   String?
-  estimatedDate  DateTime?
-  deliveryDate   DateTime?
-  isReturned     Boolean        @default(false)
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @default(now()) @updatedAt
-  order          Order          @relation(fields: [orderId], references: [id], onDelete: Cascade)
+model san_pham_dat_may {
+  ten_san_pham        String
+  ma_san_pham_dat_may String    @id(map: "san_pham_pkey") @db.Uuid
+  mo_ta_san_pham      String?
+  gia_tien            Float
+  url_Image           String
+  ngay_tao            DateTime  @default(now()) @db.Timestamp(6)
+  ngay_cap_nhat       DateTime  @default(now()) @db.Timestamp(6)
+  co_san              Boolean   @default(false)
+  ma_danh_muc         String?   @db.Uuid
+  ma_phu_lieu         String?   @db.Uuid
+  danh_muc            danh_muc? @relation(fields: [ma_danh_muc], references: [ma_danh_muc], onDelete: NoAction, onUpdate: NoAction, map: "constraint_1")
 }
 
-model Voucher {
-  id         String    @id @default(uuid())
-  code       String    @unique
-  discount   Float
-  createdAt  DateTime  @default(now())
-  updatedAt  DateTime  @default(now()) @updatedAt
-  categoryId String?
-  orders     Order[]
-  category   Category? @relation(fields: [categoryId], references: [id])
+model so_do_dat_may {
+  vong_nguc               Float?
+  vong_co                 Float?
+  vong_eo                 Float?
+  be_ngang_vai            Float?
+  vong_hong               Float?
+  chieu_dai_ao            Float?
+  chieu_dai_tu_vai_toi_eo Float?
+  chieu_dai_tay_ao        Float?
+  vong_bap_tay            Float?
+  vong_khuy_tay           Float?
+  vong_co_tay             Float?
+  chieu_dai_quan          Float?
+  createdAt               DateTime            @default(now())
+  vong_dui                Float?
+  vong_dau_goi            String?
+  vong_ong_quan           String?
+  ma_so_do                String              @id @db.Uuid
+  ma_khach_hang           String?             @db.Uuid
+  chi_tiet_don_hang       chi_tiet_don_hang[]
 }
 
-model CustomProduct {
-  id                  String         @id @default(uuid())
-  name                String
-  description         String?
-  detailedDescription String?
-  price               Float
-  imageUrl            String?
-  createdAt           DateTime       @default(now())
-  size                String?
-  color               String?
-  customAttributes    Json?
-  isAvailable         Boolean
-  productionTime      String?
-  careInstructions    String?
-  categoryId          String
-  rating              Float?
-  reviewCount         Int?
-  cartItems           CartItem[]
-  category            Category       @relation(fields: [categoryId], references: [id])
-  fabricDetails       FabricDetail[]
-  orderDetails        OrderDetail[]
+model thanh_toan {
+  id            String              @id(map: "Payment_pkey")
+  paymentMethod LoaiThanhToan
+  paymentStatus TrangThaiThanhToan
+  transactionId String?             @unique(map: "Payment_transactionId_key")
+  createdAt     DateTime            @default(now())
+  paymentDate   DateTime            @default(now())
+  paymentType   PhuongThucThanhToan
 }
 
-model Category {
-  id             String          @id @default(uuid())
-  name           String
-  imageUrl       String          @default("aaa")
-  categorySlug   String?         @unique @map("category_slug")
-  customProducts CustomProduct[]
-  vouchers       Voucher[]
+enum VaiTro {
+  KHACH_HANG
+  QUAN_TRI
 }
 
-model CustomDesign {
-  id          String   @id @default(uuid())
-  createdBy   String?
-  name        String
-  description String?
-  imageUrl    String?
-  createdAt   DateTime @default(now())
-  user        User?    @relation(fields: [createdBy], references: [id])
+enum TrangThaiLichHen {
+  CHO_XAC_NHAN
+  DA_XAC_NHAN
+  DA_HUY
 }
 
-model FabricDetail {
-  id        String        @id @default(uuid())
-  productId String
-  fabricId  String
-  quantity  Float
-  createdAt DateTime      @default(now())
-  fabric    Fabric        @relation(fields: [fabricId], references: [id], onDelete: Cascade)
-  product   CustomProduct @relation(fields: [productId], references: [id], onDelete: Cascade)
+enum TrangThaiDonHang {
+  CHO_XU_LY
+  DA_THANH_TOAN
+  DANG_GIAO
+  HOAN_THANH
+  DA_HUY
 }
 
-model Fabric {
-  id            String         @id @default(uuid())
-  name          String
-  description   String?
-  pricePerMeter Float
-  createdAt     DateTime       @default(now())
-  fabricDetails FabricDetail[]
-  warehouses    Warehouse[]
-}
-
-model Warehouse {
-  id        String   @id @default(uuid())
-  fabricId  String
-  quantity  Float
-  location  String?
-  createdAt DateTime @default(now())
-  fabric    Fabric   @relation(fields: [fabricId], references: [id], onDelete: Cascade)
-}
-
-enum Role {
-  CUSTOMER
-  ADMIN
-}
-
-enum AppointmentStatus {
-  PENDING
-  CONFIRMED
-  CANCELLED
-}
-
-enum OrderStatus {
-  PENDING
-  PAID
-  SHIPPED
-  COMPLETED
-  CANCELLED
-}
-
-enum PaymentMethod {
+enum PhuongThucThanhToan {
   ZALOPAY
-  COD
-  BANK_TRANSFER
+  THANH_TOAN_KHI_NHAN_HANG
+  CHUYEN_KHOAN
 }
 
-enum PaymentStatus {
-  PENDING
-  COMPLETED
-  FAILED
+enum TrangThaiThanhToan {
+  CHO_THANH_TOAN
+  DA_THANH_TOAN
+  THAT_BAI
 }
 
-enum PaymentType {
-  FULL_PAYMENT
-  DEPOSIT
+enum LoaiThanhToan {
+  THANH_TOAN_HET
+  DAT_COC
 }
 
-enum ShippingStatus {
-  PENDING
-  IN_TRANSIT
-  DELIVERED
-  FAILED
+enum TrangThaiGiaoHang {
+  CHO_XU_LY
+  DANG_VAN_CHUYEN
+  DA_GIAO
+  THAT_BAI
 }

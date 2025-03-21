@@ -1,0 +1,26 @@
+setIfGiaoHang({
+      id:data.ma_don_hang;
+      value:;
+      pick_name: "anh duyduy";
+      pick_address: "489/10 đường đoàn văn bơ, phường 13 ,quận 4,Tp HCM";
+      pick_province: "Tp HCMHCM";
+      pick_district: "quận 4";
+      pick_ward: "phường 13";       
+      pick_tel: "0368196092";
+      tel: ;
+      name: ;
+      address: ;
+      province: ;        
+      district: ;
+      ward: ;
+      hamlet: ;
+      email:;
+      return_name: "anh duyduy", // Tên người trả hàng giả
+    return_address: "489/10 đường đoàn văn bơ, phường 13 ,quận 4,Tp HCM", // Địa chỉ trả hàng giả
+    return_province: "Tp HCM",
+    return_district: "quận 4",
+    return_tel: "0368196092", // Số điện thoại trả hàng giả
+    return_email: "duyduy@example.com", // Email trả hàng giả
+    value: 500000, // Giá trị đơn hàng giả (VNĐ)
+        
+    })

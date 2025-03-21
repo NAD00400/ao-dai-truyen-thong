@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../lib/prisma";
+import { prisma } from "../../../lib/prisma";
 
 // 🛒 Thêm sản phẩm vào chi tiết đơn hàng
 export async function POST(req: Request) {
@@ -7,24 +7,24 @@ export async function POST(req: Request) {
     const { donHangId, sanPhamId, quantity, price } = await req.json();
 
     // Kiểm tra xem đơn hàng có tồn tại không
-    const donHang = await prisma.donHang.findUnique({
-      where: { id: donHangId },
+    const donHang = await prisma.don_hang.findUnique({
+      where: { ma_don_hang: donHangId },
     });
     if (!donHang) {
       return NextResponse.json({ error: "Đơn hàng không tồn tại" }, { status: 404 });
     }
 
     // Kiểm tra xem sản phẩm có tồn tại không
-    const sanPham = await prisma.sanPhamDatMay.findUnique({
-      where: { id: sanPhamId },
+    const sanPham = await prisma.san_pham_dat_may.findUnique({
+      where: { ma_san_pham_dat_may: sanPhamId },
     });
     if (!sanPham) {
       return NextResponse.json({ error: "Sản phẩm không tồn tại" }, { status: 404 });
     }
 
     // Thêm vào chi tiết đơn hàng
-    const newChiTiet = await prisma.chiTietDonHang.create({
-      data: { donHangId, sanPhamId, quantity, price },
+    const newChiTiet = await prisma.chi_tiet_don_hang.create({
+      data: { ma_don_hang, ma_san_pham, so_luong, gia_tien},
     });
 
     return NextResponse.json(newChiTiet);
@@ -41,16 +41,16 @@ export async function DELETE_ALL(req: Request, { params }: { params: { donHangId
     const { donHangId } = params;
 
     // Kiểm tra xem đơn hàng có tồn tại không
-    const donHang = await prisma.donHang.findUnique({
-      where: { id: donHangId },
+    const donHang = await prisma.don_hang.findUnique({
+      where: { ma_don_hang: donHangId },
     });
     if (!donHang) {
       return NextResponse.json({ error: "Đơn hàng không tồn tại" }, { status: 404 });
     }
 
     // Xóa tất cả chi tiết đơn hàng liên quan
-    await prisma.chiTietDonHang.deleteMany({
-      where: { donHangId },
+    await prisma.chi_tiet_don_hang.deleteMany({
+      where: { ma_don_hang },
     });
 
     return NextResponse.json({ message: "Xóa tất cả chi tiết đơn hàng thành công" });

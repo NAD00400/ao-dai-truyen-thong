@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-const GHTK_API_URL = 'https://api.ghtk.vn';
-const TOKEN = 'your-ghtk-token';
+const GHTK_API_URL = 'https://services.giaohangtietkiem.vn';
+const TOKEN = '14VCLU0lmqgmjLpSUDYGGXO0pz75yv5LYRfkjqR';
+
 //main
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
   switch (req.method) {

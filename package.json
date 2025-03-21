@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^9.5.0",
-    "@prisma/client": "^6.4.1",
+    "@prisma/client": "^6.6.0-dev.40",
     "@radix-ui/react-slot": "^1.1.2",
     "@vercel/blob": "^0.27.2",
     "axios": "^1.8.1",
@@ -30,6 +30,7 @@
     "react-toastify": "^11.0.5",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
+    "uuid": "^11.1.0",
     "zustand": "^5.0.3"
   },
   "devDependencies": {
@@ -41,13 +42,14 @@
     "eslint": "^9.21.0",
     "eslint-config-next": "15.1.7",
     "postcss": "^8.5.3",
-    "prisma": "^6.4.1",
+    "prisma": "^6.6.0-dev.40",
     "tailwindcss": "^3.4.17",
     "ts-node": "^10.9.2",
     "tsx": "^4.19.3",
     "typescript": "^5.8.2"
   },
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
-  }
+  "seed": "tsx prisma/seed.ts"
+}
+
 }

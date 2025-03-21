@@ -12,8 +12,8 @@ importers:
         specifier: ^9.5.0
         version: 9.5.0
       '@prisma/client':
-        specifier: ^6.4.1
-        version: 6.4.1(prisma@6.4.1(typescript@5.8.2))(typescript@5.8.2)
+        specifier: ^6.6.0-dev.40
+        version: 6.6.0-integration-refactor-schema-path-less-migrate-class.1(prisma@6.6.0-integration-refactor-schema-path-less-migrate-class.1(typescript@5.8.2))(typescript@5.8.2)
       '@radix-ui/react-slot':
         specifier: ^1.1.2
         version: 1.1.2(@types/react@19.0.10)(react@19.0.0)
@@ -56,12 +56,18 @@ importers:
       react-icons:
         specifier: ^5.5.0
         version: 5.5.0(react@19.0.0)
+      react-toastify:
+        specifier: ^11.0.5
+        version: 11.0.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       tailwind-merge:
         specifier: ^3.0.2
         version: 3.0.2
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.17(ts-node@10.9.2(@types/node@20.17.19)(typescript@5.8.2)))
+      uuid:
+        specifier: ^11.1.0
+        version: 11.1.0
       zustand:
         specifier: ^5.0.3
         version: 5.0.3(@types/react@19.0.10)(react@19.0.0)
@@ -91,8 +97,8 @@ importers:
         specifier: ^8.5.3
         version: 8.5.3
       prisma:
-        specifier: ^6.4.1
-        version: 6.4.1(typescript@5.8.2)
+        specifier: ^6.6.0-dev.40
+        version: 6.6.0-integration-refactor-schema-path-less-migrate-class.1(typescript@5.8.2)
       tailwindcss:
         specifier: ^3.4.17
         version: 3.4.17(ts-node@10.9.2(@types/node@20.17.19)(typescript@5.8.2))
@@ -788,8 +794,8 @@ packages:
     resolution: {integrity: sha512-+1VkjdD0QBLPodGrJUeqarH8VAIvQODIbwh9XpP5Syisf7YoQgsJKPNFoqqLQlu+VQ/tVSshMR6loPMn8U+dPg==}
     engines: {node: '>=14'}
 
-  '@prisma/client@6.4.1':
-    resolution: {integrity: sha512-A7Mwx44+GVZVexT5e2GF/WcKkEkNNKbgr059xpr5mn+oUm2ZW1svhe+0TRNBwCdzhfIZ+q23jEgsNPvKD9u+6g==}
+  '@prisma/client@6.6.0-integration-refactor-schema-path-less-migrate-class.1':
+    resolution: {integrity: sha512-vGWBsmH4QcBSSJo9ZdkHpSi4vjK2D2oWYR2iNRgmOr0UofXaw6hVigMAwahIrEuLjc3u0nY8wBGXF6Pa99cluQ==}
     engines: {node: '>=18.18'}
     peerDependencies:
       prisma: '*'
@@ -800,20 +806,23 @@ packages:
       typescript:
         optional: true
 
-  '@prisma/debug@6.4.1':
-    resolution: {integrity: sha512-Q9xk6yjEGIThjSD8zZegxd5tBRNHYd13GOIG0nLsanbTXATiPXCLyvlYEfvbR2ft6dlRsziQXfQGxAgv7zcMUA==}
+  '@prisma/config@6.6.0-integration-refactor-schema-path-less-migrate-class.1':
+    resolution: {integrity: sha512-naad7Zjm7bQvYsRd9pDWUtO+5BuwiPACQpTUXU0xwuZHMdPviUkqrd48S+6YIXy9EgVuXwA2risQVjOUZIL6sA==}
 
-  '@prisma/engines-version@6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d':
-    resolution: {integrity: sha512-Xq54qw55vaCGrGgIJqyDwOq0TtjZPJEWsbQAHugk99hpDf2jcEeQhUcF+yzEsSqegBaDNLA4IC8Nn34sXmkiTQ==}
+  '@prisma/debug@6.6.0-integration-refactor-schema-path-less-migrate-class.1':
+    resolution: {integrity: sha512-pr9Q7WiEHlC67ILFvMDfho6rmb6WYIAD6V/7uBxST7jdKotylab/pCpdra8ZJvX4RH1U3WRN9vzMMWWnA756ag==}
 
-  '@prisma/engines@6.4.1':
-    resolution: {integrity: sha512-KldENzMHtKYwsOSLThghOIdXOBEsfDuGSrxAZjMnimBiDKd3AE4JQ+Kv+gBD/x77WoV9xIPf25GXMWffXZ17BA==}
+  '@prisma/engines-version@6.6.0-1.1553356525b8e28a58f362554654043cba99af2f':
+    resolution: {integrity: sha512-oCJ8CkKyR5LqEW2VvXW94hpyAnwRTpIVjrTBROs8hlg0S3bzR6HjfbGsWqyaf6rcQALFv0YDHiPiPOFMsipEug==}
 
-  '@prisma/fetch-engine@6.4.1':
-    resolution: {integrity: sha512-uZ5hVeTmDspx7KcaRCNoXmcReOD+84nwlO2oFvQPRQh9xiFYnnUKDz7l9bLxp8t4+25CsaNlgrgilXKSQwrIGQ==}
+  '@prisma/engines@6.6.0-integration-refactor-schema-path-less-migrate-class.1':
+    resolution: {integrity: sha512-qZQaw+CtFU9liseS9iNLJ/ngO6skoVnknJ6TVHmUuJbIrzAHRn2rXxuXmm4gSn+pWatpFrS3omFCjLI6XBFEKg==}
 
-  '@prisma/get-platform@6.4.1':
-    resolution: {integrity: sha512-gXqZaDI5scDkBF8oza7fOD3Q3QMD0e0rBynlzDDZdTWbWmzjuW58PRZtj+jkvKje2+ZigCWkH8SsWZAsH6q1Yw==}
+  '@prisma/fetch-engine@6.6.0-integration-refactor-schema-path-less-migrate-class.1':
+    resolution: {integrity: sha512-TFkn5a9HFZ+12Jeae5mY19hB9j5xB4yVnxzW0mLsPK140e1SQK+BPtDkJpCdk9A09mXjZpvfCHKNuvOa2uIkkw==}
+
+  '@prisma/get-platform@6.6.0-integration-refactor-schema-path-less-migrate-class.1':
+    resolution: {integrity: sha512-+ohHrmuOuTZnRVUHREWPisSRX+D5TBcO0zMihZ2OtGCt9ioIJunzj2gJkPg1ZC+aVcriB4HaRPMloMw55uYBOQ==}
 
   '@protobufjs/aspromise@1.1.2':
     resolution: {integrity: sha512-j+gKExEuLmKwvz3OgROXtrJ2UG2x8Ch2YZUxahh+s1F2HZ+wAceUNLkvy6zKCPVRkU++ZWQrdxsUeQXmcg4uoQ==}
@@ -2309,8 +2318,8 @@ packages:
     resolution: {integrity: sha512-vkcDPrRZo1QZLbn5RLGPpg/WmIQ65qoWWhcGKf/b5eplkkarX0m9z8ppCat4mlOqUsWpyNuYgO3VRyrYHSzX5g==}
     engines: {node: '>= 0.8.0'}
 
-  prisma@6.4.1:
-    resolution: {integrity: sha512-q2uJkgXnua/jj66mk6P9bX/zgYJFI/jn4Yp0aS6SPRrjH/n6VyOV7RDe1vHD0DX8Aanx4MvgmUPPoYnR6MJnPg==}
+  prisma@6.6.0-integration-refactor-schema-path-less-migrate-class.1:
+    resolution: {integrity: sha512-ELy1E0PeFuxAI85j3BVAzZmtoUbHw3NRAp/CCBOZJLe+xUlSv0miRAyd73RhUg85pySJ7Qgd1J53IwO/vUTPgQ==}
     engines: {node: '>=18.18'}
     hasBin: true
     peerDependencies:
@@ -2352,6 +2361,12 @@ packages:
 
   react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
+
+  react-toastify@11.0.5:
+    resolution: {integrity: sha512-EpqHBGvnSTtHYhCPLxML05NLY2ZX0JURbAdNYa6BUkk+amz4wbKBQvoKQAB0ardvSarUBuY4Q4s1sluAzZwkmA==}
+    peerDependencies:
+      react: ^18 || ^19
+      react-dom: ^18 || ^19
 
   react@19.0.0:
     resolution: {integrity: sha512-V8AVnmPIICiWpGfm6GLzCR/W5FXLchHop40W4nXBmdlEceh16rCN8O8LNWm5bh5XUX91fh7KpA+W0TgMKmgTpQ==}
@@ -3510,31 +3525,38 @@ snapshots:
   '@pkgjs/parseargs@0.11.0':
     optional: true
 
-  '@prisma/client@6.4.1(prisma@6.4.1(typescript@5.8.2))(typescript@5.8.2)':
+  '@prisma/client@6.6.0-integration-refactor-schema-path-less-migrate-class.1(prisma@6.6.0-integration-refactor-schema-path-less-migrate-class.1(typescript@5.8.2))(typescript@5.8.2)':
     optionalDependencies:
-      prisma: 6.4.1(typescript@5.8.2)
+      prisma: 6.6.0-integration-refactor-schema-path-less-migrate-class.1(typescript@5.8.2)
       typescript: 5.8.2
 
-  '@prisma/debug@6.4.1': {}
-
-  '@prisma/engines-version@6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d': {}
-
-  '@prisma/engines@6.4.1':
+  '@prisma/config@6.6.0-integration-refactor-schema-path-less-migrate-class.1':
     dependencies:
-      '@prisma/debug': 6.4.1
-      '@prisma/engines-version': 6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d
-      '@prisma/fetch-engine': 6.4.1
-      '@prisma/get-platform': 6.4.1
+      esbuild: 0.25.0
+      esbuild-register: 3.6.0(esbuild@0.25.0)
+    transitivePeerDependencies:
+      - supports-color
 
-  '@prisma/fetch-engine@6.4.1':
-    dependencies:
-      '@prisma/debug': 6.4.1
-      '@prisma/engines-version': 6.4.0-29.a9055b89e58b4b5bfb59600785423b1db3d0e75d
-      '@prisma/get-platform': 6.4.1
+  '@prisma/debug@6.6.0-integration-refactor-schema-path-less-migrate-class.1': {}
 
-  '@prisma/get-platform@6.4.1':
+  '@prisma/engines-version@6.6.0-1.1553356525b8e28a58f362554654043cba99af2f': {}
+
+  '@prisma/engines@6.6.0-integration-refactor-schema-path-less-migrate-class.1':
     dependencies:
-      '@prisma/debug': 6.4.1
+      '@prisma/debug': 6.6.0-integration-refactor-schema-path-less-migrate-class.1
+      '@prisma/engines-version': 6.6.0-1.1553356525b8e28a58f362554654043cba99af2f
+      '@prisma/fetch-engine': 6.6.0-integration-refactor-schema-path-less-migrate-class.1
+      '@prisma/get-platform': 6.6.0-integration-refactor-schema-path-less-migrate-class.1
+
+  '@prisma/fetch-engine@6.6.0-integration-refactor-schema-path-less-migrate-class.1':
+    dependencies:
+      '@prisma/debug': 6.6.0-integration-refactor-schema-path-less-migrate-class.1
+      '@prisma/engines-version': 6.6.0-1.1553356525b8e28a58f362554654043cba99af2f
+      '@prisma/get-platform': 6.6.0-integration-refactor-schema-path-less-migrate-class.1
+
+  '@prisma/get-platform@6.6.0-integration-refactor-schema-path-less-migrate-class.1':
+    dependencies:
+      '@prisma/debug': 6.6.0-integration-refactor-schema-path-less-migrate-class.1
 
   '@protobufjs/aspromise@1.1.2': {}
 
@@ -5354,11 +5376,10 @@ snapshots:
 
   prelude-ls@1.2.1: {}
 
-  prisma@6.4.1(typescript@5.8.2):
+  prisma@6.6.0-integration-refactor-schema-path-less-migrate-class.1(typescript@5.8.2):
     dependencies:
-      '@prisma/engines': 6.4.1
-      esbuild: 0.25.0
-      esbuild-register: 3.6.0(esbuild@0.25.0)
+      '@prisma/config': 6.6.0-integration-refactor-schema-path-less-migrate-class.1
+      '@prisma/engines': 6.6.0-integration-refactor-schema-path-less-migrate-class.1
     optionalDependencies:
       fsevents: 2.3.3
       typescript: 5.8.2
@@ -5407,6 +5428,12 @@ snapshots:
       react: 19.0.0
 
   react-is@16.13.1: {}
+
+  react-toastify@11.0.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      clsx: 2.1.1
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   react@19.0.0: {}
 
