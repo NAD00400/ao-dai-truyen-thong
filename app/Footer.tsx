@@ -3,7 +3,7 @@ export default function Footer (){
     return(
     <>
     
-        <footer className="bg-[#081f2c] text-[#FDF0D5] text-center py-8 px-6 min-h-24">
+        <footer className="bg-[#081f2c] text-[#FDF0D5] text-center py-8 px-6 min-h-24 ">
             <p className="text-lg">&copy; 2025 Áo Dài Truyền Thống. Mọi quyền được bảo lưu.</p>
             <p className="mt-2 text-base">
                 Liên hệ: 

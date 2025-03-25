@@ -57,29 +57,27 @@ export default function LandingPage() {
     route.push(`/products/product-detail/${id}`);
   }
     // Hàm toggle phóng to video (nếu bạn muốn ấn vào video để phóng to)
-    const toggleEnlarge = () => {
-      setIsEnlarged((prev) => !prev);
-    };
+    // const toggleEnlarge = () => {
+    //   setIsEnlarged((prev) => !prev);
+    // };
   
   // Định nghĩa thứ tự mong muốn cho các danh mục
-    const desiredOrder = ["party-ao-dai", "office-ao-dai", "traditional-ao-dai", "family-ao-dai", "student-ao-dai"];
+    const desiredOrder = ["ao-dai-cong-so", "ao-dai-du-tiec", "ao-dai-truyen-thong", "ao-dai-hoc-sinh", "ao-dai-gia-dinh"];
     // Sau khi fetch xong, sắp xếp danh mục theo thứ tự mong muốn
     const sortedCategories = categories.slice().sort((a, b) => {
       // So sánh theo tên (đã chuyển thành chữ thường để khớp với mảng desiredOrder)
-      return desiredOrder.indexOf(a.categorySlug.toLowerCase()) - desiredOrder.indexOf(b.categorySlug.toLowerCase());
+      return desiredOrder.indexOf(a.ma_danh_muc) - desiredOrder.indexOf(b.ma_danh_muc);
 
     });
 
   const fetchData = async () => {
     try {
       const [catRes, prodRes] = await Promise.all([
-        fetch("/api/category").then((res) => res.json()),
-        fetch("/api/custom-product").then((res) => res.json()),
+        fetch("/api/danh-muc").then((res) => res.json()),
+        fetch("/api/san-pham").then((res) => res.json()),
       ]);
       setCategories(catRes);
       setProducts(prodRes);
-      console.log(catRes, prodRes);
-      
     } catch (err) {
       console.log("Lỗi khi lấy dữ liệu:", err);
     } finally {
@@ -158,9 +156,9 @@ export default function LandingPage() {
         </div>
       </div>
     </div>
-      {/* Hero Section */}
-      <section className="relative mt-24 m-16 h-screen rounded-3xl flex flex-col items-center justify-center text-center px-6">
-        {/* Text Section */}
+    
+      {/* <section className="relative mt-24 m-16 h-screen rounded-3xl flex flex-col items-center justify-center text-center px-6">
+        
         <motion.div
           initial={{ opacity: 0, y: -30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -180,14 +178,14 @@ export default function LandingPage() {
             </Button>
           </motion.div>
         </motion.div>
-        {/* Slider Section */}
+        
         <div className="relative mt-5 w-full h-auto overflow-hidden rounded-3xl">
           <img
             src={images[currentIndex]}
             alt="Áo dài"
             className="w-full h-full object-cover transition-all duration-500"
           />
-          {/* Navigation Buttons */}
+          
           <button
             onClick={prevSlide}
             className="absolute top-1/2  left-4 transform -translate-y-1/2 bg-black/50 p-2 rounded-full text-white hover:bg-black/70 transition-opacity"
@@ -201,7 +199,7 @@ export default function LandingPage() {
             <ChevronRight size={24} />
           </button>
         </div>
-      </section>
+      </section> */}
         
 
         
@@ -218,26 +216,26 @@ export default function LandingPage() {
           <Skeleton className="h-40 w-full rounded-lg" />
         ) : (
           sortedCategories.map((category) => {
-            const categoryProducts = products.filter((p) => p.categoryId === category.id);
-            const startIndex = scrollPositions[category.id] || 0;
+            const categoryProducts = products.filter((p) => p.ma_danh_muc === category.ma_danh_muc);
+            const startIndex = scrollPositions[category.ma_danh_muc] || 0;
             const visibleProducts = categoryProducts.slice(startIndex, startIndex + 3);
 
             return (
               <div
-              key={category.id}
+              key={category.ma_danh_muc}
               className="p-6 rounded-3xl grid grid-cols-1 lg:grid-cols-3 gap-6 transition-all duration-300"
             >
               {/* Ảnh danh mục */}
               <div className="relative w-full h-64 md:h-[355px] hover:shadow-xl rounded-lg overflow-hidden col-span-1 group">
                 <Image
-                  src={category.imageUrl}
-                  alt={category.name}
+                  src={category.url_image}
+                  alt={category.ten_danh_muc}
                   fill 
                   style={{ objectFit: "cover" }} 
                   className="rounded-lg transform transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-transparent flex items-end p-4">
-                  <h2 className="text-2xl font-bold text-yellow-100">{category.name}</h2>
+                  <h2 className="text-2xl font-bold text-yellow-100">{category.ten_danh_muc}</h2>
                 </div>
               </div>
             
@@ -246,13 +244,13 @@ export default function LandingPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {visibleProducts.map((product) => (
                     <Card
-                      key={product.id}
+                      key={product.ma_san_pham_dat_may}
                       className="min-w-[200px] border border-gray-300 hover:border-gray-500 transition-all duration-300 rounded-lg"
                     >
                       <CardContent className="relative w-full aspect-[4/3] rounded-t-lg overflow-hidden">
                         <Image
-                          src={product.imageUrl}
-                          alt={product.name}
+                          src={product.url_Image}
+                          alt={product.ten_san_pham}
                           fill // ✅ Thay thế layout="fill"
                           style={{ objectFit: "cover" }} 
                           className="rounded-t-lg transition-transform duration-300 hover:scale-105"
@@ -260,15 +258,15 @@ export default function LandingPage() {
                       </CardContent>
                       <div className="p-3">
                         <h3 className="text-lg text-[#780000] font-semibold">
-                          {product.name}
+                          {product.ten_san_pham}
                         </h3>
-                        <p className={`text-lg ${product.price ? "text-[#003049]" : "text-gray-500"}`}>
-                          {product.price ? `${product.price.toLocaleString()} VND` : "Giá liên hệ"}
+                        <p className={`text-lg ${product.gia_tien ? "text-[#003049]" : "text-gray-500"}`}>
+                          {product.gia_tien ? `${product.gia_tien.toLocaleString()} VND` : "Giá liên hệ"}
                         </p>
                       </div>
                       <CardFooter className="flex justify-start gap-2 p-3">
                         <Button
-                          onClick={()=>handelDetail(product.id)}
+                          onClick={()=>handelDetail(product.ma_danh_muc)}
                           variant="outline"
                           className="bg-[#003049] text-[#FDF0D5] hover:bg-neutral-300 transition-all duration-300"
                           size="sm"
@@ -312,7 +310,7 @@ export default function LandingPage() {
         )}
       </div >
         {/* Video Section */}
-        <motion.section
+        {/* <motion.section
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -324,7 +322,7 @@ export default function LandingPage() {
                 Xem các mẫu áo dài đẹp nhất qua video thực tế.
               </p>
         
-              {/* Khung video chính */}
+              
               <div
                 className={`relative mx-auto overflow-hidden rounded-xl shadow-lg transition-transform duration-300 ${
                   isEnlarged ? "max-w-5xl" : "max-w-3xl"
@@ -339,7 +337,7 @@ export default function LandingPage() {
                 ></iframe>
               </div>
         
-              {/* Danh sách thumbnail video */}
+              
               <div className="mt-6 flex justify-center gap-4 flex-wrap">
                 {videos.map((video, index) => (
                   <div
@@ -363,8 +361,9 @@ export default function LandingPage() {
               <p className="mt-2 text-sm text-gray-600">
                 {isEnlarged ? "Nhấn để thu nhỏ video" : "Nhấn vào video để phóng to"}
               </p>
-            </motion.section>
+            </motion.section> */}
         {/* Đánh giá Section */}
+
         <motion.div
           initial="hidden"
           whileInView="visible"

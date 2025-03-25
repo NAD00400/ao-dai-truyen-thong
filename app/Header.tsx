@@ -3,10 +3,11 @@
 import { motion } from "framer-motion";
 import { LucideUserCheck, MapPin, Menu, ShoppingCart, User, X } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+
 import { useEffect, useState } from "react";
-import { useAuthStore } from "./(public)/storage-local/authStore";
 import { useCart } from "./context/cartContext";
+import { useAuthStore } from "./page/(public)/local stg/authStore";
+import Link from "next/link";
 
 interface MenuItem {
   name: string;
@@ -15,12 +16,13 @@ interface MenuItem {
 }
 
 const menuItems: MenuItem[] = [
-  { name: "Áo Dài Truyền Thống", link: "/products/traditional-ao-dai" },
-  { name: "Áo Dài Công Sở", link: "/products/office-ao-dai" },
-  { name: "Áo Dài Dự Tiệc", link: "/products/party-ao-dai" },
-  { name: "Áo Dài Học Sinh", link: "/products/student-ao-dai" },
-  { name: "Áo Dài Cho Gia Đình", link: "/products/family-ao-dai" },
-  { name: "Tư Vấn Thiết Kế", link: "/services" },{ name: "Liên Hệ", link: "/contact" },
+  { name: "Áo Dài Truyền Thống", link: "/page/san-pham/ao-dai-truyen-thong" },
+  { name: "Áo Dài Công Sở", link: "/page/san-pham/ao-dai-cong-so" },
+  { name: "Áo Dài Dự Tiệc", link: "/page/san-pham/ao-dai-du-tiec" },
+  { name: "Áo Dài Học Sinh", link: "/page/san-pham/ao-dai-hoc-sinh" },
+  { name: "Áo Dài Cho Gia Đình", link: "/page/san-pham/ao-dai-gia-dinh" },
+  
+  
 ];
 
 export default function Header() {
@@ -102,12 +104,12 @@ export default function Header() {
                     {menu.name}
                   </a>
                 ) : (
-                  <Link
-                    href={menu.link}
-                    className="text-white transition hover:text-gray-300"
-                  >
-                    {menu.name}
-                  </Link>
+                    <Link
+                      href={menu.link}
+                      className="text-white transition hover:text-gray-300"
+                    >
+                      {menu.name}
+                    </Link>
                 )}
                 {hoveredMenu === index &&
                   menu.subItems &&
@@ -135,7 +137,7 @@ export default function Header() {
 
           {/* Icons */}
           <div className="hidden md:flex items-center space-x-4">
-          <Link href="/cart" className="text-white relative">
+          <Link href="/page/gio-hang" className="text-white relative">
             <ShoppingCart size={24} />
             {cartCount > 0 && (
               <span className="absolute -top-1 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
@@ -143,21 +145,19 @@ export default function Header() {
               </span>
             )}
           </Link>
-            <Link href="/account" className="text-white">
+            <Link href="/page/dang-nhap" className="text-white">
               {user ? <LucideUserCheck size={24} /> : <User size={24} />}
             </Link>
-            <Link href="/location" className="text-white">
+            <Link href="/page/dia-chi" className="text-white">
               <MapPin size={24} />
             </Link>
           </div>
-
-          {/* Mobile Menu Button */}
           <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-white">
             {isOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -167,41 +167,17 @@ export default function Header() {
           >
             {menuItems.map((menu, index) => (
               <div key={index} className="border-b border-gray-600 px-6 py-3">
-                {menu.name === "Liên Hệ" ? (
-                  <a
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleContactClick(e);
-                      setIsOpen(false);
-                    }}
-                    className="text-white block w-full"
-                  >
-                    {menu.name}
-                  </a>
-                ) : (
-                  <Link
+                    <Link
                     href={menu.link}
                     className="text-white block w-full"
-                    onClick={() => setIsOpen(false)}
-                  >
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setIsOpen(false);
+                      window.location.href = menu.link;
+                    }}
+                    >
                     {menu.name}
-                  </Link>
-                )}
-                {menu.subItems && (
-                  <div className="ml-4 mt-2">
-                    {menu.subItems.map((subItem, subIndex) => (
-                      <Link
-                        key={subIndex}
-                        href={subItem.link}
-                        className="block text-gray-300 py-1 hover:text-white"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        {subItem.name}
-                      </Link>
-                    ))}
-                  </div>
-                )}
+                    </Link>
               </div>
             ))}
           </motion.div>

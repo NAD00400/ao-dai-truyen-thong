@@ -55,7 +55,7 @@ model giao_hang {
   ghi_chu           String?
   ngay_giao_du_kien DateTime?
   ngay_giao_thuc_te DateTime?
-  ma_don_hang        String    @db.Uuid
+  ma_hoa_don        String    @db.Uuid
   ma_van_don        String?
   ly_do_huy         String?
   ngay_tao          DateTime? @default(now()) @db.Timestamp(6)
@@ -69,7 +69,8 @@ model giao_hang {
   phuong_giao_hang  String?
   quan_giao_hang    String?
   sdt_giao_hang     String?
-  don_hang          don_hang  @relation(fields: [ma_don_hang ], references: [ma_don_hang], onDelete: NoAction, onUpdate: NoAction, map: "fk_tb_don_hang")
+  duong_giao_hang   String?
+  don_hang          don_hang  @relation(fields: [ma_hoa_don], references: [ma_don_hang], onDelete: NoAction, onUpdate: NoAction, map: "fk_tb_don_hang")
 }
 
 model gio_hang {
@@ -102,7 +103,6 @@ model khach_hang {
   don_hang           don_hang[]
   gio_hang           gio_hang[]
   nguoi_dung         nguoi_dung? @relation(fields: [ma_nguoi_dung], references: [ma_nguoi_dung], onDelete: NoAction, onUpdate: NoAction, map: "fk_tb_nguoi_dung")
-
   @@index([ma_nguoi_dung], map: "index_1", type: Hash)
 }
 
@@ -113,13 +113,13 @@ model khuyen_mai {
   ngay_het_han       DateTime? @db.Date
 }
 
-  model lich_hen_khach_hang {
-    ma_lich_hen   String    @id(map: "lic_pkey") @db.Uuid
-    ma_khach_hang String?   @db.Uuid
-    ngay_hen      DateTime? @db.Timestamp(6)
-    ngay_tao      DateTime? @db.Timestamp(6)
-    trang         String?
-  }
+model lich_hen_khach_hang {
+  ma_lich_hen   String    @id(map: "lic_pkey") @db.Uuid
+  ma_khach_hang String?   @db.Uuid
+  ngay_hen      DateTime? @db.Timestamp(6)
+  ngay_tao      DateTime? @db.Timestamp(6)
+  trang         String?
+}
 
 model nguoi_dung {
   ma_nguoi_dung     String       @id(map: "User_pkey")
